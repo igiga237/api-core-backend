@@ -1,12 +1,18 @@
 const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config(); 
+const cors = require('cors'); 
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(express.json());
+
+app.use(cors({
+  origin: 'https://dev.wouessi.com' 
+}));
+
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
@@ -20,7 +26,11 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 // Test route
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send('Welcome to Wouessi Back Office');
+});
+
+app.get('/data', (req, res) => {
+  res.json({ message: 'Hello from the Wouessi Back Office!' });
 });
 
 app.listen(PORT, () => {
