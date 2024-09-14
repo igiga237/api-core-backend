@@ -9,8 +9,12 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(express.json());
 
+// Use http://localhost:3000 local environment
+// Use http://dev.wouessi.com for dev envrionment
+// Use http://wouessi.com for prod environment
+
 app.use(cors({
-  origin: 'https://dev.wouessi.com' 
+  origin: 'http://dev.wouessi.com' 
 }));
 
 
