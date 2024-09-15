@@ -4,19 +4,17 @@ require('dotenv').config();
 const cors = require('cors'); 
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 
 // Middleware
 app.use(express.json());
 
-// Use http://localhost:3000 local environment
-// Use http://dev.wouessi.com for dev envrionment
-// Use http://wouessi.com for prod environment
+// Set CORS origin from environment variable
+const allowedOrigin = process.env.WOUESSI_FRONTEND_URL
 
 app.use(cors({
-  origin: 'http://dev.wouessi.com' 
+  origin: allowedOrigin
 }));
-
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
