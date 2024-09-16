@@ -3,7 +3,7 @@ const cors = require('cors');
 const allowedOrigin = process.env.WOUESSI_FRONTEND_URL; // Get the allowed origin from environment variables
 const bodyParser = require('body-parser');
 const contactRoutes = require('./routes/contactRoutes');
-
+const newsletterRoute = require("./routes/newsletterRoutes");
 
 require('dotenv').config();  // Load environment variables
 const connectToDB = require("./utils/database");
@@ -37,6 +37,15 @@ app.use(bodyParser.json());
 // Routes
 app.use('/api/contact', contactRoutes);
 
+app.use("/api/newsletter", newsletterRoute);
+
+app.use(
+    '/graphql',
+    graphqlHTTP({
+        schema: newsletterSchema, // Use the schema here
+        graphiql: true, // Enables GraphiQL interface for testing
+    })
+);
 
 // Use CORS middleware to allow requests from your frontend
 app.use(cors({
