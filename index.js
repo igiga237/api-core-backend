@@ -1,6 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const allowedOrigin = process.env.WOUESSI_FRONTEND_URL; // Get the allowed origin from environment variables
+const bodyParser = require('body-parser');
+const contactRoutes = require('./routes/contactRoutes');
+
 
 require('dotenv').config();  // Load environment variables
 const connectToDB = require("./utils/database");
@@ -27,6 +30,13 @@ app.use(express.json());
 
 // Use the portfolio routes
 app.use("/api", portfolioRoutes);
+
+// Middleware
+app.use(bodyParser.json());
+
+// Routes
+app.use('/api/contact', contactRoutes);
+
 
 // Use CORS middleware to allow requests from your frontend
 app.use(cors({
