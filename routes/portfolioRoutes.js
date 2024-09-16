@@ -1,19 +1,11 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const router = express.Router();
 const Portfolio = require("../models/Portfolio");
-const connectToDB = require("../utils/database");
-
-const app = express();
-
-// Middleware to parse JSON bodies
-app.use(express.json());
 
 // Fetch all portfolio items
 router.get("/portfolios", async (req, res) => {
-    console.log("hello")
+    console.log("End Point /portfolios hit.")
     try {
-        await connectToDB('Wouessi')
         const portfolio = await Portfolio.find();
         res.json(portfolio);
     } catch (error) {
@@ -22,9 +14,8 @@ router.get("/portfolios", async (req, res) => {
     }
 });
 
-
-// Post a portfolio items
-app.post('/portfolio', async (req, res) => {
+// Post a portfolio item
+router.post('/portfolio', async (req, res) => {
     const { image, title, link } = req.body;
     try {
         const newPortfolio = new Portfolio({ image, title, link });
@@ -37,7 +28,7 @@ app.post('/portfolio', async (req, res) => {
 });
 
 // Fetch a single portfolio item by ID
-app.get('/portfolios/:id', async (req, res) => {
+router.get('/portfolios/:id', async (req, res) => {
     try {
         const portfolio = await Portfolio.findById(req.params.id);
         if (!portfolio) {

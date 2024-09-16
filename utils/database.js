@@ -6,7 +6,7 @@ const connectToDB = async (dbName) => {
 
 
     if (connections[dbName]) {
-        console.log(`MongoDB is already connected to ${dbName}`);
+        console.log(`MongoDB Connection Ok. Connected to ${dbName}`);
         return connections[dbName]; // Return the existing connection
     }
 
