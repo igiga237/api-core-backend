@@ -26,6 +26,54 @@ mongoose.connect(process.env.MONGODB_URI, {
   console.error('MongoDB connection error:', error);
 });
 
+// Portfolio schema
+const portfolioSchema = new mongoose.Schema({
+  image: String,
+  title: String,
+  link: String,
+});
+
+const Portfolio = mongoose.model('Portfolio', portfolioSchema, 'Portfolio');
+
+// Fetch all portfolio items
+app.get('/portfolio', async (req, res) => {
+  try {
+    const portfolio = await Portfolio.find();
+    res.json(portfolio);
+  } catch (error) {
+    console.error('Error fetching portfolio', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+// Post a portfolio items
+app.post('/portfolio', async (req, res) => {
+  const { image, title, link } = req.body;
+  try {
+    const newPortfolio = new Portfolio({ image, title, link });
+    await newPortfolio.save();
+    res.status(201).json(newPortfolio);
+  } catch (error) {
+    console.error('Error adding portfolio', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+// Fetch a single portfolio item by ID
+app.get('/portfolios/:id', async (req, res) => {
+  try {
+    const portfolio = await Portfolio.findById(req.params.id);
+    if (!portfolio) {
+      return res.status(404).json({ message: 'Portfolio not found' });
+    }
+    res.json(portfolio);
+  } catch (error) {
+    console.error('Error fetching portfolio', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+
 // Define your routes
 app.get('/', (req, res) => {
   res.send('Welcome to Wouessi Back Office');
