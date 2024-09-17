@@ -6,6 +6,6 @@ const portfolioSchema = new mongoose.Schema({
     link: String,
 });
 
-const Portfolio = mongoose.model('Wouessi', portfolioSchema,"Portfolio");
+const Portfolio = mongoose.models.Wouessi || mongoose.model('Wouessi', portfolioSchema, "Portfolio");
 
 module.exports = Portfolio;

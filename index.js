@@ -13,13 +13,13 @@ const portfolioRoutes = require('./routes/portfolioRoutes');
 const app = express();
 
 // Middleware to parse JSON bodies
-app.use(express.json());
+// app.use(express.json());
 
-// Use CORS middleware to allow requests from your frontend
-app.use(cors({
-  origin: allowedOrigin, // Dynamically set the allowed CORS origin
-  credentials: true,     // If you need to support cookies, enable this
-}));
+// // Use CORS middleware to allow requests from your frontend
+// app.use(cors({
+//   origin: allowedOrigin, // Dynamically set the allowed CORS origin
+//   credentials: true,     // If you need to support cookies, enable this
+// }));
 
 // Connect to MongoDB with a specific database name
 const dbName = "Wouessi"; // You can replace this with any database name
@@ -42,15 +42,15 @@ app.use(bodyParser.json());
 // Routes
 app.use('/api/contact', contactRoutes);
 
-app.use("/api/newsletter", newsletterRoute);
-
-app.use(
-    '/graphql',
-    graphqlHTTP({
-        schema: newsletterSchema, // Use the schema here
-        graphiql: true, // Enables GraphiQL interface for testing
-    })
-);
+// app.use("/api/newsletter", newsletterRoute);
+//
+// app.use(
+//     '/graphql',
+//     graphqlHTTP({
+//         schema: newsletterSchema, // Use the schema here
+//         graphiql: true, // Enables GraphiQL interface for testing
+//     })
+// );
 
 // Use CORS middleware to allow requests from your frontend
 app.use(cors({
