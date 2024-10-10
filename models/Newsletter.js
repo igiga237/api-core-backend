@@ -1,15 +1,15 @@
-const mongoose = require("mongoose");
+// models/Newsletter.js
+const mongoose = require('mongoose');
 
 const newsletterSchema = new mongoose.Schema({
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    subscribedAt: {
-        type: Date,
-        default: Date.now,
-    },
-});
+  email: {
+    type: String,
+    required: true,
+    unique: true, // Ensures no duplicate email subscriptions
+    match: [/.+\@.+\..+/, 'Please enter a valid email'] // Basic email format validation
+  }
+}, { timestamps: true });
 
-module.exports = mongoose.model("Wouessi", newsletterSchema, "Newsletter");
+const Newsletter = mongoose.model('Newsletter', newsletterSchema);
+
+module.exports = Newsletter;

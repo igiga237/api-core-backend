@@ -1,28 +1,28 @@
 const express = require('express');
 const cors = require('cors');
-const allowedOrigin = process.env.WOUESSI_FRONTEND_URL; // Get the allowed origin from environment variables
 const bodyParser = require('body-parser');
-const contactRoutes = require('./routes/contactRoutes');
 const newsletterRoute = require("./routes/newsletterRoutes");
 
-require('dotenv').config();  // Load environment variables
-const connectToDB = require("./utils/database");
-const portfolioRoutes = require('./routes/portfolioRoutes');
+require('dotenv').config(); 
 
-// Create Express app
+const connectToDB = require("./utils/database");
+
 const app = express();
 
-// Middleware to parse JSON bodies
-// app.use(express.json());
+// Use CORS middleware to allow requests from your frontend
+app.use(cors({
+  origin: process.env.WOUESSI_FRONTEND_URL, // Dynamically set the allowed CORS origin
+  credentials: true,     // If you need to support cookies, enable this
+}));
 
-// // Use CORS middleware to allow requests from your frontend
-// app.use(cors({
-//   origin: allowedOrigin, // Dynamically set the allowed CORS origin
-//   credentials: true,     // If you need to support cookies, enable this
-// }));
+// Middleware
+app.use(bodyParser.json());
+
+// Add the newsletter route
+app.use('/api/newsletter', newsletterRoute);
 
 // Connect to MongoDB with a specific database name
-const dbName = "Wouessi"; // You can replace this with any database name
+const dbName = "Wouessi"; 
 
 connectToDB(dbName)
   .then(() => {
@@ -32,30 +32,6 @@ connectToDB(dbName)
     console.error("Error connecting to the database", error);
     process.exit(1); // Exit the process if the connection fails
   });
-
-// Use the portfolio routes
-app.use("/api", portfolioRoutes);
-
-// Middleware
-app.use(bodyParser.json());
-
-// Routes
-app.use('/api/contact', contactRoutes);
-
-// app.use("/api/newsletter", newsletterRoute);
-//
-// app.use(
-//     '/graphql',
-//     graphqlHTTP({
-//         schema: newsletterSchema, // Use the schema here
-//         graphiql: true, // Enables GraphiQL interface for testing
-//     })
-// );
-
-// Use CORS middleware to allow requests from your frontend
-app.use(cors({
-  origin: allowedOrigin  // Dynamically set the allowed CORS origin
-}));
 
 // Define your routes
 app.get('/', (req, res) => {
