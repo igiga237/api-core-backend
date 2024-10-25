@@ -2,8 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const newsletterRoute = require("./routes/newsletterRoutes");
+const blogRoute = require("./routes/blog");
+const contactRoute = require("./routes/contact");
 
-require('dotenv').config(); 
+require('dotenv').config();
 
 const connectToDB = require("./utils/database");
 
@@ -12,7 +14,7 @@ const app = express();
 // Use CORS middleware to allow requests from your frontend
 app.use(cors({
   origin: process.env.WOUESSI_FRONTEND_URL, // Dynamically set the allowed CORS origin
-  credentials: true,     // If you need to support cookies, enable this
+  credentials: true,
 }));
 
 // Middleware
@@ -20,9 +22,10 @@ app.use(bodyParser.json());
 
 // Add the newsletter route
 app.use('/api/newsletter', newsletterRoute);
+app.use('/api/blog', blogRoute);
+app.use('/api/contact', contactRoute);
 
-// Connect to MongoDB with a specific database name
-const dbName = "Wouessi"; 
+const dbName = "Wouessi";
 
 connectToDB(dbName)
   .then(() => {
