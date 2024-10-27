@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Contact = require("../models/contact"); // Import Contact model
-const sendMail = require("../helpers/sendMail"); // Import the sendMail function
+const Contact = require("../models/Contact"); // Import Contact model
 
 // POST route to handle contact form submission
 router.post("/", async (req, res) => {
