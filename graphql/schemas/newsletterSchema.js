@@ -1,5 +1,5 @@
 const { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLList } = require('graphql');
-const Newsletter = require('../../models/newsletter'); // Adjusted path
+const Newsletter = require('../../models/Newsletter'); // Adjusted path
 
 // Define the Newsletter Type
 const NewsletterType = new GraphQLObjectType({
