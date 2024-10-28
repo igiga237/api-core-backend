@@ -46,7 +46,7 @@ router.post("/", async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Contact form submitted successfully!" });
+      .json({ message: "Thank you for sending us a message, someone from our team will reach out to you soon." });
   } catch (error) {
     return res
       .status(500)
