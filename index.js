@@ -1,11 +1,11 @@
 const express = require('express');
 const cors = require('cors');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const newsletterRoute = require("./routes/newsletterRoutes");
 const blogRoute = require("./routes/blog");
 const contactRoute = require("./routes/contact");
 
-require('dotenv').config();
+require('dotenv').config({path : "./.env"});
 
 const connectToDB = require("./utils/database");
 
@@ -13,12 +13,12 @@ const app = express();
 
 // Use CORS middleware to allow requests from your frontend
 app.use(cors({
-  origin: [process.env.WOUESSI_FRONTEND_URL, "https://dev.wouessi.com/en", "https://dev.wouessi.com", "https://wouessi.com/en", "https://wouessi.com"], // Dynamically set the allowed CORS origin
+  origin: [process.env.WOUESSI_FRONTEND_URL, "https://dev.wouessi.com/en", "https://dev.wouessi.com"], // Dynamically set the allowed CORS origin
   credentials: true,
 }));
 
 // Middleware
-app.use(bodyParser.json());
+app.use(express.json());
 
 // Add the newsletter route
 app.use('/api/newsletter', newsletterRoute);
