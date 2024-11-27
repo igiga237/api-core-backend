@@ -51,10 +51,11 @@ const translateToFrench = async (markdownContent, title, author) => {
 
 
 router.post('/', async (req, res) => {
-  const { title, slug, markdownContent, author } = req.body;
+  const { title, slug, markdownContent, author, timeToRead, imageUrl } = req.body;
 
   try {
     // Check if blog with same slug already exists
+    console.log("ttttouched");
     const existingBlog = await blog.findOne({ slug });
 
     if (existingBlog) {
@@ -74,6 +75,8 @@ router.post('/', async (req, res) => {
 
     const newBlog = new blog({
       slug,
+      timeToRead,
+      imageUrl,
       translations: [
         {
           language: 'en',

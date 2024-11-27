@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 
 const blogSchema = new mongoose.Schema({
   slug: { type: String, required: true, unique: true },
+  timeToRead: { type: Number, required: true },
+  imageUrl: { type: String, required: true },
   translations: [
     {
       language: { type: String, required: true },
