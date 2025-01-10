@@ -13,7 +13,7 @@ const app = express();
 
 // Use CORS middleware to allow requests from your frontend
 app.use(cors({
-  origin: [process.env.WOUESSI_FRONTEND_URL, "https://dev.wouessi.com/en", "https://dev.wouessi.com", "https://www.wouessi.com/en", "https://www.wouessi.com"], // Dynamically set the allowed CORS origin
+  origin: [process.env.WOUESSI_FRONTEND_URL, "https://dev.wouessi.com/en", "https://dev.wouessi.com", "https://www.wouessi.com/en", "https://www.wouessi.com", "https://www.wouessi.ca/en/", "https://www.wouessi.ca"], // Dynamically set the allowed CORS origin
   credentials: true,
 }));
 
