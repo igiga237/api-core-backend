@@ -17,7 +17,7 @@
 - **Backend Framework**: [Node.js](https://nodejs.org/) with [Express](https://expressjs.com/)
 - **Database**: [MongoDB]
 - **Authentication**: [JSON Web Tokens (JWT)](https://jwt.io/) / OAuth (if applicable)
-- **Deployment**: [Docker](https://www.docker.com/) | [AWS](https://aws.amazon.com/), [Heroku](https://www.heroku.com/), or others.
+- **Deployment**: [Docker](https://www.docker.com/) | Vercel
 
 ---
 
