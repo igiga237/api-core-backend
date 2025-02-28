@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +17,12 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mongoose": "^8.6.2",
-    "nodemailer": "^6.9.15"
+    "nodemailer": "^6.9.15",
+    "nodemon": "^3.1.9"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.7.1",
+    "@commitlint/config-conventional": "^19.7.1",
+    "husky": "^9.1.7"
   }
 }
