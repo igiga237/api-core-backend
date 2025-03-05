@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 // const bodyParser = require('body-parser');
 const newsletterRoute = require("./routes/newsletterRoutes");
+const categoryRoute = require("./routes/category");
 const blogRoute = require("./routes/blog");
 const contactRoute = require("./routes/contact");
 
@@ -23,6 +24,7 @@ app.use(express.json());
 // Add the newsletter route
 app.use('/api/newsletter', newsletterRoute);
 app.use('/api/blog', blogRoute);
+app.use('/api/category', categoryRoute);
 app.use('/api/contact', contactRoute);
 
 const dbName = "Wouessi";
