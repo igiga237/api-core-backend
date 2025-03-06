@@ -11,14 +11,13 @@ router.post("/", async (req, res) => {
     try{
         // Verify if the category already exist
         const existingCatgory = await Category.findOne({
-            $or: [{name}, {slug}]
+            $or: [{slug}]
         })
 
         if(existingCatgory){
-            res.status(400).json({
-                message: "A category with this same name or slug already exists.",
-                error: error.message
-            })
+            return res.status(400).json({
+                message: "A category with this same name or slug already exists."
+            });
         }
 
         // const translations = await TranslationService.translateCategoryContent(req.body);
@@ -107,7 +106,7 @@ router.delete('/:id', async (req, res) => {
 
         if (blogCount > 0) {
             return res.status(400).json({
-                error: "Unable to delete a category containing blogs"
+                message: "Unable to delete a category containing blogs"
             });
         }
 
@@ -167,7 +166,7 @@ router.get('/:slug', async (req, res) => {
         });
     } catch (error) {
         return res.status(500).json({
-            error: error.message || "Erreur serveur"
+            error: error.message || "Server error"
         });
     }
 });
