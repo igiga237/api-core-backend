@@ -1,10 +1,22 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const blog = require('../models/blog');
-const TranslationService = require("../utils/translate")
+const blog = require("../models/blog");
+const TranslationService = require("../utils/translate");
 
-router.post('/', async (req, res) => {
-  const { title, slug, markdownContent, author, timeToRead, imageUrl, cloudinaryPubicUrl, cloudinaryAssetId, tags, shortDesc, categoryIds  } = req.body;
+router.post("/", async (req, res) => {
+  const {
+    title,
+    slug,
+    markdownContent,
+    author,
+    timeToRead,
+    imageUrl,
+    cloudinaryPubicUrl,
+    cloudinaryAssetId,
+    tags,
+    shortDesc,
+    categoryIds,
+  } = req.body;
 
   try {
     // Check if blog with same slug already exists
@@ -12,14 +24,18 @@ router.post('/', async (req, res) => {
 
     if (existingBlog) {
       return res.status(400).json({
-        message: 'Slug already exists. Please choose a different slug.',
+        message: "Slug already exists. Please choose a different slug.",
       });
     }
 
     // Validate that categoryIds is an array
-    if (!categoryIds || !Array.isArray(categoryIds) || categoryIds.length === 0) {
+    if (
+      !categoryIds ||
+      !Array.isArray(categoryIds) ||
+      categoryIds.length === 0
+    ) {
       return res.status(400).json({
-        message: 'At least one category is required.',
+        message: "At least one category is required.",
       });
     }
 
@@ -42,7 +58,7 @@ router.post('/', async (req, res) => {
       tags,
       translations: [
         {
-          language: 'en',
+          language: "en",
           title, // Title in English
           markdownContent, // Markdown content in English
           author, // Author in English
@@ -61,14 +77,13 @@ router.post('/', async (req, res) => {
 
     await newBlog.save();
 
-    res.status(201).json({ message: 'Blog Created Successfully' });
+    res.status(201).json({ message: "Blog Created Successfully" });
   } catch (error) {
     res.status(500).json({ message: error });
   }
 });
 
-
-router.get('/:slug', async (req, res) => {
+router.get("/:slug", async (req, res) => {
   const slug = req.params.slug;
 
   try {
@@ -84,66 +99,59 @@ router.get('/:slug', async (req, res) => {
   }
 });
 
-
 router.get("/", async (req, res) => {
   try {
-    // Fetch blogs, including the timeToRead field and translations for title and shortDesc
-    const blogs = await blog.find(
-      {}, // No filter
-      {
-        slug: 1, 
-        imageUrl: 1, 
-        tags: 1, // Include the tags field
-        timeToRead: 1, // Include timeToRead
-        category: 1,
-        "translations.language": 1,
-        "translations.title": 1, 
-        "translations.shortDesc": 1 
-      } // Projection: select necessary fields
-    ).populate('categories'); // Populate the entire category object;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.perPage) || 12;
+    const search = req.query.search || "";
+    const skip = (page - 1) * limit;
 
-    // Check if no blogs are found
-    if (blogs.length === 0) {
-      return res.status(404).json({ error: "No blogs found." });
+    let searchQuery = {};
+    if (search) {
+      searchQuery["translations.title"] = { $regex: search, $options: "i" };
     }
 
-    // Map through the blog data to return the necessary details
-    const blogDetails = blogs.map(blogData => {
-      const { slug, imageUrl, tags, timeToRead, translations, categories } = blogData;
+    const totalBlogs = await blog.countDocuments(searchQuery);
+    const totalPages = Math.ceil(totalBlogs / limit);
 
-      // Extract only 'en' and 'fr' translations for title and shortDesc
-      const enTranslation = translations.find(t => t.language === 'en');
-      const frTranslation = translations.find(t => t.language === 'fr');
+    const blogs = await blog.find(searchQuery).select().skip(skip).limit(limit);
 
-      return {
-        slug: slug,
-        imageUrl: imageUrl,
-        tags: tags || [], // Ensure tags is always an array
-        timeToRead: timeToRead, // Include timeToRead
-        title: {
-          en: enTranslation ? enTranslation.title : null,
-          fr: frTranslation ? frTranslation.title : null
-        },
-        shortDesc: {
-          en: enTranslation ? enTranslation.shortDesc : null,
-          fr: frTranslation ? frTranslation.shortDesc : null
-        },
-        categories: categories,
-      };
+    return res.status(200).json({
+      blogs: blogs.map((blogData) => {
+        const { translations } = blogData;
+
+        // Extract only 'en' and 'fr' translations for title and shortDesc
+        const enTranslation = translations.find((t) => t.language === "en");
+        const frTranslation = translations.find((t) => t.language === "fr");
+
+        return {
+          slug: blogData.slug,
+          imageUrl: blogData.imageUrl || "https://via.placeholder.com/300",
+          tags: blogData.tags || [],
+          timeToRead: blogData.timeToRead || 0,
+          title: {
+            en: enTranslation ? enTranslation.title : null,
+            fr: frTranslation ? frTranslation.title : null,
+          },
+          shortDesc: {
+            en: enTranslation ? enTranslation.shortDesc : null,
+            fr: frTranslation ? frTranslation.shortDesc : null,
+          },
+          categories: blogData.categories,
+        };
+      }),
+      pagination: {
+        currentPage: page,
+        lastPage: totalPages,
+        perPage: limit,
+        totalBlogs,
+      },
     });
-
-    return res.status(200).json({ blogs: blogDetails });
-
   } catch (error) {
     return res.status(500).json({ error: error.message || "Server Error" });
   }
 });
 
-
-
-
-
 // GET: Retrieve a single blog by slug
-
 
 module.exports = router;
