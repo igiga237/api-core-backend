@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const blog = require("../models/blog");
+const category = require("../models/category");
 const TranslationService = require("../utils/translate");
 
 router.post("/", async (req, res) => {
@@ -104,9 +105,23 @@ router.get("/", async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.perPage) || 12;
     const search = req.query.search || "";
+    const cat = req.query.category || "";
     const skip = (page - 1) * limit;
 
     let searchQuery = {};
+
+    if (cat) {
+      const categoryItem = await category.findOne({ slug: cat });
+
+      if (!categoryItem) {
+        return res.status(404).json({
+          error: "Category not found",
+        });
+      }
+
+      searchQuery = { categories: categoryItem._id };
+    }
+
     if (search) {
       searchQuery["translations.title"] = { $regex: search, $options: "i" };
     }
@@ -152,20 +167,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET: Retrieve all blog for the specific category
-router.get('/findByCategory/:id', async(req, res) => {
-  const id = req.params.id;
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.perPage) || 12;
-  const skip = (page - 1) * limit;
-  const totalBlogs = await blog.countDocuments({ categories: id });
-  const totalPages = Math.ceil(totalBlogs / limit);
-
-  //const blogs = await blog.find({ categories: { $elemMatch: { id: id } } });
-  const blogs = await blog.find({ categories: id }).select().skip(skip).limit(limit);
-
-    res.status(200).json(blogs);
-
-});
+// GET: Retrieve a single blog by slug
 
 module.exports = router;
